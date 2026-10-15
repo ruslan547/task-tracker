@@ -54,6 +54,19 @@ a:hover { text-decoration: underline; }
 
 .main-content { max-width: 1280px; margin: 0 auto; padding: 24px; }
 
+.project-nav {
+  display: flex; align-items: center; gap: 4px;
+  margin-bottom: 20px; padding: 4px; background: white;
+  border-radius: var(--radius); border: 1px solid var(--border);
+}
+.project-nav-link {
+  padding: 8px 16px; border-radius: 6px; font-size: 14px; font-weight: 500;
+  color: var(--text-secondary); text-decoration: none; transition: all 0.15s;
+}
+.project-nav-link:hover { background: #f1f5f9; color: var(--text); text-decoration: none; }
+.project-nav-link.active { background: var(--primary); color: white; }
+.project-nav-link.back { margin-left: auto; color: var(--text-secondary); font-size: 13px; }
+
 .page-header {
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 24px;

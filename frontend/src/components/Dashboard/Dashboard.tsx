@@ -68,10 +68,6 @@ export default function Dashboard() {
     <div className="dashboard">
       <div className="page-header">
         <h1>Дашборд: {project?.name}</h1>
-        <div>
-          <Link to={`/project/${projectId}/board`} className="btn btn-outline">Доска</Link>
-          <Link to={`/project/${projectId}/issues`} className="btn btn-outline" style={{ marginLeft: 8 }}>Задачи</Link>
-        </div>
       </div>
 
       <div className="stats-grid">

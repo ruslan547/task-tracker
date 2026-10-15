@@ -3,6 +3,7 @@ import { AuthProvider } from './context/AuthContext';
 import LoginPage from './components/Auth/LoginPage';
 import RegisterPage from './components/Auth/RegisterPage';
 import AppLayout from './components/Layout/AppLayout';
+import ProjectLayout from './components/Layout/ProjectLayout';
 import ProjectList from './components/Projects/ProjectList';
 import KanbanBoard from './components/Board/KanbanBoard';
 import IssueList from './components/Issues/IssueList';
@@ -19,10 +20,12 @@ export default function App() {
           <Route path="/register" element={<RegisterPage />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<ProjectList />} />
-            <Route path="/project/:projectId/board" element={<KanbanBoard />} />
-            <Route path="/project/:projectId/issues" element={<IssueList />} />
-            <Route path="/project/:projectId/issue/:issueId" element={<IssueDetail />} />
-            <Route path="/project/:projectId/dashboard" element={<Dashboard />} />
+            <Route path="/project/:projectId" element={<ProjectLayout />}>
+              <Route path="board" element={<KanbanBoard />} />
+              <Route path="issues" element={<IssueList />} />
+              <Route path="issue/:issueId" element={<IssueDetail />} />
+              <Route path="dashboard" element={<Dashboard />} />
+            </Route>
             <Route path="/users" element={<UsersPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" />} />

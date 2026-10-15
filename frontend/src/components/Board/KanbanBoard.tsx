@@ -71,7 +71,6 @@ export default function KanbanBoard() {
     <div className="kanban-board">
       <div className="page-header">
         <h1>Доска: {board.name}</h1>
-        <Link to={`/project/${projectId}/issues`} className="btn btn-outline">Список задач</Link>
       </div>
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="board-columns">

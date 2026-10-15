@@ -66,7 +66,6 @@ export default function IssueList() {
       <div className="page-header">
         <h1>Задачи ({projectKey})</h1>
         <div>
-          <Link to={`/project/${projectId}/board`} className="btn btn-outline">Доска</Link>
           {canCreateIssues(user?.role) && (
             <button onClick={() => setShowForm(!showForm)} className="btn btn-primary" style={{ marginLeft: 8 }}>
               {showForm ? 'Отмена' : '+ Новая задача'}
