@@ -7,6 +7,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { setAuth } = useAuth();
   const navigate = useNavigate();
@@ -44,7 +45,12 @@ export default function RegisterPage() {
           </div>
           <div className="form-group">
             <label>Пароль</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+            <div className="password-field">
+              <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} required minLength={6} />
+              <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? '🙈' : '👁'}
+              </button>
+            </div>
           </div>
           <button type="submit" className="btn btn-primary">Зарегистрироваться</button>
         </form>

@@ -6,6 +6,7 @@ import { useAuth } from '../../context/AuthContext';
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const { setAuth } = useAuth();
   const navigate = useNavigate();
@@ -39,7 +40,12 @@ export default function LoginPage() {
           </div>
           <div className="form-group">
             <label>Пароль</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+            <div className="password-field">
+              <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} required />
+              <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? '🙈' : '👁'}
+              </button>
+            </div>
           </div>
           <button type="submit" className="btn btn-primary">Войти</button>
         </form>
