@@ -112,6 +112,17 @@ npm run dev
 
 ### 4. Docker (альтернативный вариант)
 
+Для macOS с Colima (вместо Docker Desktop):
+```bash
+# Запуск Colima (если ещё не запущена)
+colima delete
+colima start --disk 20 --cpu 2 --memory 4
+
+# Проверить что Docker работает
+docker info
+```
+
+Запуск контейнеров:
 ```bash
 cd task-tracker
 docker-compose up -d
