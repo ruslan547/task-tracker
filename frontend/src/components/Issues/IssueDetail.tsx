@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getIssue, updateIssue, deleteIssue } from '../../api/issues';
 import { getCommentsByIssue, createComment } from '../../api/comments';
 import { getUsers } from '../../api/auth';
+import { useAuth } from '../../context/AuthContext';
 import { Issue, Comment, User } from '../../types';
 
 const statusOptions = [
@@ -15,8 +16,11 @@ const statusOptions = [
 const priorityOptions = ['Lowest', 'Low', 'Medium', 'High', 'Highest'];
 
 export default function IssueDetail() {
+  const { user: currentUser } = useAuth();
   const { projectId, issueId } = useParams<{ projectId: string; issueId: string }>();
   const navigate = useNavigate();
+  const isObserver = currentUser?.role === 'Observer';
+  const canDelete = currentUser?.role === 'Administrator' || currentUser?.role === 'ProjectManager';
   const [issue, setIssue] = useState<Issue | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -85,7 +89,7 @@ export default function IssueDetail() {
           <Link to={`/project/${projectId}/issues`} className="back-link">&larr; К списку задач</Link>
           <span className="issue-key-badge">{issue.issueKey}</span>
         </div>
-        <button onClick={handleDelete} className="btn btn-danger">Удалить</button>
+        {canDelete && <button onClick={handleDelete} className="btn btn-danger">Удалить</button>}
       </div>
 
       <div className="issue-content">
@@ -100,9 +104,9 @@ export default function IssueDetail() {
               </div>
             </div>
           ) : (
-            <div onClick={() => setEditing(true)} style={{ cursor: 'pointer' }}>
+            <div onClick={() => !isObserver && setEditing(true)} style={{ cursor: isObserver ? 'default' : 'pointer' }}>
               <h1>{issue.title}</h1>
-              <p className="issue-description">{issue.description || 'Нет описания. Нажмите для редактирования.'}</p>
+              <p className="issue-description">{issue.description || (isObserver ? 'Нет описания.' : 'Нет описания. Нажмите для редактирования.')}</p>
             </div>
           )}
 
@@ -117,44 +121,61 @@ export default function IssueDetail() {
                 <p>{c.text}</p>
               </div>
             ))}
-            <form onSubmit={handleAddComment} className="comment-form">
-              <textarea
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                placeholder="Добавить комментарий..."
-              />
-              <button type="submit" className="btn btn-primary" disabled={!newComment.trim()}>
-                Отправить
-              </button>
-            </form>
+            {!isObserver && (
+              <form onSubmit={handleAddComment} className="comment-form">
+                <textarea
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  placeholder="Добавить комментарий..."
+                />
+                <button type="submit" className="btn btn-primary" disabled={!newComment.trim()}>
+                  Отправить
+                </button>
+              </form>
+            )}
           </div>
         </div>
 
         <div className="issue-sidebar">
           <div className="sidebar-field">
             <label>Статус</label>
-            <select
-              value={statusOptions.findIndex(s => s.label === (
+            {isObserver ? (
+              <span className={`badge status-${issue.status.toLowerCase()}`}>{statusOptions.find(s => s.label === (
                 issue.status === 'Todo' ? 'К выполнению' :
                 issue.status === 'InProgress' ? 'В работе' :
                 issue.status === 'Testing' ? 'Тестирование' : 'Готово'
-              ))}
-              onChange={(e) => handleStatusChange(Number(e.target.value))}
-            >
-              {statusOptions.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
-            </select>
+              ))?.label}</span>
+            ) : (
+              <select
+                value={statusOptions.findIndex(s => s.label === (
+                  issue.status === 'Todo' ? 'К выполнению' :
+                  issue.status === 'InProgress' ? 'В работе' :
+                  issue.status === 'Testing' ? 'Тестирование' : 'Готово'
+                ))}
+                onChange={(e) => handleStatusChange(Number(e.target.value))}
+              >
+                {statusOptions.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
+              </select>
+            )}
           </div>
           <div className="sidebar-field">
             <label>Приоритет</label>
-            <select
-              value={priorityOptions.indexOf(issue.priority)}
-              onChange={(e) => handlePriorityChange(Number(e.target.value))}
-            >
-              {priorityOptions.map((p, i) => <option key={p} value={i}>{p}</option>)}
-            </select>
+            {isObserver ? (
+              <span className={`badge priority-${issue.priority.toLowerCase()}`}>{issue.priority}</span>
+            ) : (
+              <select
+                value={priorityOptions.indexOf(issue.priority)}
+                onChange={(e) => handlePriorityChange(Number(e.target.value))}
+              >
+                {priorityOptions.map((p, i) => <option key={p} value={i}>{p}</option>)}
+              </select>
+            )}
           </div>
           <div className="sidebar-field">
             <label>Исполнитель</label>
+            {isObserver ? (
+              <span>{issue.assigneeName || 'Не назначен'}</span>
+            ) : (
             <select
               value={issue.assigneeId || ''}
               onChange={(e) => handleAssigneeChange(e.target.value)}
@@ -162,6 +183,7 @@ export default function IssueDetail() {
               <option value="">Не назначен</option>
               {users.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}
             </select>
+            )}
           </div>
           <div className="sidebar-field">
             <label>Тип</label>

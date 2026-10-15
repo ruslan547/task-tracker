@@ -37,6 +37,7 @@ public class IssuesController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Administrator,ProjectManager,Developer,Tester")]
     [HttpPost]
     public async Task<ActionResult<IssueDto>> Create(CreateIssueDto dto)
     {
@@ -44,6 +45,7 @@ public class IssuesController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
+    [Authorize(Roles = "Administrator,ProjectManager,Developer,Tester")]
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<IssueDto>> Update(Guid id, UpdateIssueDto dto)
     {
@@ -51,6 +53,7 @@ public class IssuesController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Administrator,ProjectManager,Developer,Tester")]
     [HttpPatch("{id:guid}/move")]
     public async Task<IActionResult> Move(Guid id, [FromBody] IssueStatus status)
     {
@@ -58,6 +61,7 @@ public class IssuesController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = "Administrator,ProjectManager")]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

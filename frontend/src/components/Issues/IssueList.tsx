@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getIssuesByProject, createIssue } from '../../api/issues';
 import { getUsers } from '../../api/auth';
+import { useAuth } from '../../context/AuthContext';
 import { Issue, User } from '../../types';
 import { getProject } from '../../api/projects';
+
+const canCreateIssues = (role?: string) => role !== 'Observer';
 
 const typeOptions = ['Bug', 'Task', 'Story', 'Epic'];
 const priorityOptions = ['Lowest', 'Low', 'Medium', 'High', 'Highest'];
@@ -15,6 +18,7 @@ const statusLabels: Record<string, string> = {
 };
 
 export default function IssueList() {
+  const { user } = useAuth();
   const { projectId } = useParams<{ projectId: string }>();
   const [issues, setIssues] = useState<Issue[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -59,9 +63,11 @@ export default function IssueList() {
         <h1>Задачи ({projectKey})</h1>
         <div>
           <Link to={`/project/${projectId}/board`} className="btn btn-outline">Доска</Link>
-          <button onClick={() => setShowForm(!showForm)} className="btn btn-primary" style={{ marginLeft: 8 }}>
-            {showForm ? 'Отмена' : '+ Новая задача'}
-          </button>
+          {canCreateIssues(user?.role) && (
+            <button onClick={() => setShowForm(!showForm)} className="btn btn-primary" style={{ marginLeft: 8 }}>
+              {showForm ? 'Отмена' : '+ Новая задача'}
+            </button>
+          )}
         </div>
       </div>
 

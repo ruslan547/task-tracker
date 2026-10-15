@@ -29,6 +29,7 @@ public class CommentsController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Administrator,ProjectManager,Developer,Tester")]
     [HttpPost("issue/{issueId:guid}")]
     public async Task<ActionResult<CommentDto>> Create(Guid issueId, CreateCommentDto dto)
     {

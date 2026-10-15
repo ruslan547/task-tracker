@@ -17,6 +17,7 @@ export default function Navbar() {
       </div>
       <div className="navbar-menu">
         <Link to="/">Проекты</Link>
+        {user?.role === 'Administrator' && <Link to="/users">Пользователи</Link>}
         {user && (
           <div className="navbar-user">
             <span>{user.fullName} ({user.role})</span>

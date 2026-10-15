@@ -8,6 +8,7 @@ import KanbanBoard from './components/Board/KanbanBoard';
 import IssueList from './components/Issues/IssueList';
 import IssueDetail from './components/Issues/IssueDetail';
 import Dashboard from './components/Dashboard/Dashboard';
+import UsersPage from './components/Auth/UsersPage';
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
             <Route path="/project/:projectId/issues" element={<IssueList />} />
             <Route path="/project/:projectId/issue/:issueId" element={<IssueDetail />} />
             <Route path="/project/:projectId/dashboard" element={<Dashboard />} />
+            <Route path="/users" element={<UsersPage />} />
           </Route>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

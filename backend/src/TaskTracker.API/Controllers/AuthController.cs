@@ -51,4 +51,12 @@ public class AuthController : ControllerBase
         var result = await _mediator.Send(new GetUsersQuery());
         return Ok(result);
     }
+
+    [Authorize(Roles = "Administrator")]
+    [HttpPatch("users/{userId:guid}/role")]
+    public async Task<ActionResult<UserDto>> UpdateRole(Guid userId, UpdateRoleDto dto)
+    {
+        var result = await _mediator.Send(new UpdateUserRoleCommand(userId, dto.Role));
+        return Ok(result);
+    }
 }

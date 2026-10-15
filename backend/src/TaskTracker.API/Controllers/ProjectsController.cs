@@ -36,6 +36,7 @@ public class ProjectsController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Administrator,ProjectManager")]
     [HttpPost]
     public async Task<ActionResult<ProjectDto>> Create(CreateProjectDto dto)
     {
@@ -43,6 +44,7 @@ public class ProjectsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
+    [Authorize(Roles = "Administrator,ProjectManager")]
     [HttpPut("{id:guid}")]
     public async Task<ActionResult<ProjectDto>> Update(Guid id, UpdateProjectDto dto)
     {
@@ -50,6 +52,7 @@ public class ProjectsController : ControllerBase
         return Ok(result);
     }
 
+    [Authorize(Roles = "Administrator,ProjectManager")]
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> Delete(Guid id)
     {

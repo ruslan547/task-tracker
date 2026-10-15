@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getProjects, createProject, deleteProject } from '../../api/projects';
+import { useAuth } from '../../context/AuthContext';
 import { Project } from '../../types';
 
+const canManageProjects = (role?: string) => role === 'Administrator' || role === 'ProjectManager';
+
 export default function ProjectList() {
+  const { user } = useAuth();
   const [projects, setProjects] = useState<Project[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [name, setName] = useState('');
@@ -34,9 +38,11 @@ export default function ProjectList() {
     <div className="project-list">
       <div className="page-header">
         <h1>Проекты</h1>
-        <button onClick={() => setShowForm(!showForm)} className="btn btn-primary">
-          {showForm ? 'Отмена' : '+ Новый проект'}
-        </button>
+        {canManageProjects(user?.role) && (
+          <button onClick={() => setShowForm(!showForm)} className="btn btn-primary">
+            {showForm ? 'Отмена' : '+ Новый проект'}
+          </button>
+        )}
       </div>
 
       {showForm && (
@@ -67,7 +73,9 @@ export default function ProjectList() {
                 <span className="project-key">{p.key}</span>
                 <h3>{p.name}</h3>
               </Link>
-              <button onClick={() => handleDelete(p.id)} className="btn-icon delete" title="Удалить">&#x2715;</button>
+              {canManageProjects(user?.role) && (
+                <button onClick={() => handleDelete(p.id)} className="btn-icon delete" title="Удалить">&#x2715;</button>
+              )}
             </div>
             {p.description && <p className="project-desc">{p.description}</p>}
             <div className="project-stats">
