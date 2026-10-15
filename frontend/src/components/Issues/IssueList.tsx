@@ -10,12 +10,16 @@ const canCreateIssues = (role?: string) => role !== 'Observer';
 
 const typeOptions = ['Bug', 'Task', 'Story', 'Epic'];
 const priorityOptions = ['Lowest', 'Low', 'Medium', 'High', 'Highest'];
+const statusOptions = ['Todo', 'InProgress', 'Testing', 'Done'];
 const statusLabels: Record<string, string> = {
   Todo: 'К выполнению',
   InProgress: 'В работе',
   Testing: 'Тестирование',
   Done: 'Готово',
 };
+
+const toStr = (val: string | number, options: string[]) =>
+  typeof val === 'number' ? options[val] ?? String(val) : val;
 
 export default function IssueList() {
   const { user } = useAuth();
@@ -122,9 +126,9 @@ export default function IssueList() {
             <tr key={issue.id}>
               <td><Link to={`/project/${projectId}/issue/${issue.id}`}>{issue.issueKey}</Link></td>
               <td><Link to={`/project/${projectId}/issue/${issue.id}`}>{issue.title}</Link></td>
-              <td><span className={`badge type-${issue.type.toLowerCase()}`}>{issue.type}</span></td>
-              <td><span className={`badge priority-${issue.priority.toLowerCase()}`}>{issue.priority}</span></td>
-              <td><span className={`badge status-${issue.status.toLowerCase()}`}>{statusLabels[issue.status] || issue.status}</span></td>
+              <td><span className={`badge type-${toStr(issue.type, typeOptions).toLowerCase()}`}>{toStr(issue.type, typeOptions)}</span></td>
+              <td><span className={`badge priority-${toStr(issue.priority, priorityOptions).toLowerCase()}`}>{toStr(issue.priority, priorityOptions)}</span></td>
+              <td><span className={`badge status-${toStr(issue.status, statusOptions).toLowerCase()}`}>{statusLabels[toStr(issue.status, statusOptions)] || toStr(issue.status, statusOptions)}</span></td>
               <td>{issue.assigneeName || '—'}</td>
             </tr>
           ))}
