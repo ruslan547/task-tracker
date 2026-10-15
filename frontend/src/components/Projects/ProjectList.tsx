@@ -91,7 +91,7 @@ export default function ProjectList() {
         ))}
       </div>
       {projects.length === 0 && !showForm && (
-        <p className="empty-state">Нет проектов. Создайте первый!</p>
+        <p className="empty-state">{canManageProjects(user?.role) ? 'Нет проектов. Создайте первый!' : 'Нет доступных проектов.'}</p>
       )}
     </div>
   );
