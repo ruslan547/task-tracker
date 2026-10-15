@@ -19,9 +19,9 @@ public class BoardsController : ControllerBase
     }
 
     [HttpGet("project/{projectId:guid}")]
-    public async Task<ActionResult<BoardDto>> GetByProject(Guid projectId)
+    public async Task<ActionResult<BoardDto>> GetByProject(Guid projectId, [FromQuery] Guid? sprintId)
     {
-        var result = await _mediator.Send(new GetBoardByProjectQuery(projectId));
+        var result = await _mediator.Send(new GetBoardByProjectQuery(projectId, sprintId));
         return Ok(result);
     }
 }

@@ -11,6 +11,9 @@ export default function ProjectNav() {
       <NavLink to={`/project/${projectId}/issues`} className={({ isActive }) => isActive ? 'project-nav-link active' : 'project-nav-link'}>
         Задачи
       </NavLink>
+      <NavLink to={`/project/${projectId}/sprints`} className={({ isActive }) => isActive ? 'project-nav-link active' : 'project-nav-link'}>
+        Спринты
+      </NavLink>
       <NavLink to={`/project/${projectId}/dashboard`} className={({ isActive }) => isActive ? 'project-nav-link active' : 'project-nav-link'}>
         Дашборд
       </NavLink>

@@ -23,6 +23,9 @@ public class Issue : BaseEntity
     public Guid ReporterId { get; set; }
     public AppUser Reporter { get; set; } = null!;
 
+    public Guid? SprintId { get; set; }
+    public Sprint? Sprint { get; set; }
+
     public Guid? ParentIssueId { get; set; }
     public Issue? ParentIssue { get; set; }
     public ICollection<Issue> SubIssues { get; set; } = new List<Issue>();

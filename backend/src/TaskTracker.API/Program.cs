@@ -36,9 +36,24 @@ using (var scope = app.Services.CreateScope())
 
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler(error => error.Run(async context =>
+{
+    var exception = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>()?.Error;
+    context.Response.ContentType = "application/json";
+    context.Response.StatusCode = exception switch
+    {
+        UnauthorizedAccessException => 401,
+        KeyNotFoundException => 404,
+        ArgumentException => 400,
+        _ => 500
+    };
+    await context.Response.WriteAsJsonAsync(new { error = exception?.Message ?? "Internal error" });
+}));
 
 app.UseCors("AllowFrontend");
 app.UseAuthentication();

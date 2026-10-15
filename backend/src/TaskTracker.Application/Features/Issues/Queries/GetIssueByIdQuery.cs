@@ -24,7 +24,7 @@ public class GetIssueByIdQueryHandler : IRequestHandler<GetIssueByIdQuery, Issue
                 i.Id, i.Title, i.Description, i.Type, i.Priority, i.Status,
                 i.IssueKey, i.IssueNumber, i.Deadline,
                 i.ProjectId, i.AssigneeId, i.Assignee != null ? i.Assignee.FullName : null,
-                i.ReporterId, i.Reporter.FullName, i.ParentIssueId,
+                i.ReporterId, i.Reporter.FullName, i.ParentIssueId, i.SprintId,
                 i.CreatedAt, i.UpdatedAt,
                 i.IssueTags.Select(t => t.Tag.Name).ToList()))
             .FirstOrDefaultAsync(cancellationToken)

@@ -3,7 +3,8 @@ import { useParams, Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable, DropResult } from '@hello-pangea/dnd';
 import { getBoardByProject } from '../../api/boards';
 import { moveIssue } from '../../api/issues';
-import { Board, BoardColumn } from '../../types';
+import { getSprintsByProject } from '../../api/sprints';
+import { Board, BoardColumn, Sprint } from '../../types';
 
 const statusMap: Record<string, number> = {
   Todo: 0,
@@ -30,14 +31,24 @@ const typeIcons: Record<string, string> = {
 export default function KanbanBoard() {
   const { projectId } = useParams<{ projectId: string }>();
   const [board, setBoard] = useState<Board | null>(null);
+  const [sprints, setSprints] = useState<Sprint[]>([]);
+  const [selectedSprintId, setSelectedSprintId] = useState<string>('');
 
-  const load = () => {
+  useEffect(() => {
     if (projectId) {
-      getBoardByProject(projectId).then((res) => setBoard(res.data));
+      getSprintsByProject(projectId).then((res) => {
+        setSprints(res.data);
+        const active = res.data.find((s) => s.status === 'Active');
+        if (active) setSelectedSprintId(active.id);
+      });
     }
-  };
+  }, [projectId]);
 
-  useEffect(() => { load(); }, [projectId]);
+  useEffect(() => {
+    if (projectId) {
+      getBoardByProject(projectId, selectedSprintId || undefined).then((res) => setBoard(res.data));
+    }
+  }, [projectId, selectedSprintId]);
 
   const handleDragEnd = async (result: DropResult) => {
     if (!result.destination || !board) return;
@@ -67,10 +78,31 @@ export default function KanbanBoard() {
 
   if (!board) return <div className="loading">Загрузка доски...</div>;
 
+  const activeSprint = sprints.find((s) => s.id === selectedSprintId);
+
   return (
     <div className="kanban-board">
       <div className="page-header">
-        <h1>Доска: {board.name}</h1>
+        <div>
+          <h1>Scrum-доска</h1>
+          {activeSprint && (
+            <span className="sprint-info">
+              {activeSprint.name} ({new Date(activeSprint.startDate).toLocaleDateString('ru')} — {new Date(activeSprint.endDate).toLocaleDateString('ru')})
+            </span>
+          )}
+        </div>
+        <select
+          className="sprint-select"
+          value={selectedSprintId}
+          onChange={(e) => setSelectedSprintId(e.target.value)}
+        >
+          <option value="">Все задачи</option>
+          {sprints.map((s) => (
+            <option key={s.id} value={s.id}>
+              {s.name} {s.status === 'Active' ? '(активный)' : s.status === 'Completed' ? '(завершён)' : '(план.)'}
+            </option>
+          ))}
+        </select>
       </div>
       <DragDropContext onDragEnd={handleDragEnd}>
         <div className="board-columns">

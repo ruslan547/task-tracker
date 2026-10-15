@@ -45,6 +45,7 @@ export interface Issue {
   reporterId: string;
   reporterName: string;
   parentIssueId?: string;
+  sprintId?: string;
   createdAt: string;
   updatedAt?: string;
   tags: string[];
@@ -73,6 +74,25 @@ export interface Board {
   name: string;
   projectId: string;
   columns: BoardColumn[];
+}
+
+export type SprintStatus = 'Planning' | 'Active' | 'Completed';
+
+export interface Sprint {
+  id: string;
+  name: string;
+  goal?: string;
+  startDate: string;
+  endDate: string;
+  status: SprintStatus;
+  projectId: string;
+  totalIssues: number;
+  doneIssues: number;
+}
+
+export interface BurndownPoint {
+  date: string;
+  remaining: number;
 }
 
 export interface Comment {

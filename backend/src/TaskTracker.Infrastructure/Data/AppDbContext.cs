@@ -18,10 +18,17 @@ public class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
     public DbSet<Comment> Comments => Set<Comment>();
     public DbSet<Tag> Tags => Set<Tag>();
     public DbSet<IssueTag> IssueTags => Set<IssueTag>();
+    public DbSet<Sprint> Sprints => Set<Sprint>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
         builder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+    }
+
+    protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
+    {
+        configurationBuilder.Properties<DateTime>().HaveColumnType("timestamp without time zone");
+        configurationBuilder.Properties<DateTime?>().HaveColumnType("timestamp without time zone");
     }
 }

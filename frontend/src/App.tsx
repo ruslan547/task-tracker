@@ -9,6 +9,7 @@ import KanbanBoard from './components/Board/KanbanBoard';
 import IssueList from './components/Issues/IssueList';
 import IssueDetail from './components/Issues/IssueDetail';
 import Dashboard from './components/Dashboard/Dashboard';
+import SprintManager from './components/Sprints/SprintManager';
 import UsersPage from './components/Auth/UsersPage';
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
               <Route path="board" element={<KanbanBoard />} />
               <Route path="issues" element={<IssueList />} />
               <Route path="issue/:issueId" element={<IssueDetail />} />
+              <Route path="sprints" element={<SprintManager />} />
               <Route path="dashboard" element={<Dashboard />} />
             </Route>
             <Route path="/users" element={<UsersPage />} />

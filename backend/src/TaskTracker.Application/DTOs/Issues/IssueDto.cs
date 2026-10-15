@@ -18,6 +18,7 @@ public record IssueDto(
     Guid ReporterId,
     string ReporterName,
     Guid? ParentIssueId,
+    Guid? SprintId,
     DateTime CreatedAt,
     DateTime? UpdatedAt,
     List<string> Tags);

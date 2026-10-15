@@ -13,5 +13,6 @@ public interface IAppDbContext
     DbSet<Comment> Comments { get; }
     DbSet<Tag> Tags { get; }
     DbSet<IssueTag> IssueTags { get; }
+    DbSet<Sprint> Sprints { get; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

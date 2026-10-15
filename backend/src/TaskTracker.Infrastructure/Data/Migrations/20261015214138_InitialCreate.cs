@@ -33,7 +33,7 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     FullName = table.Column<string>(type: "text", nullable: false),
                     Role = table.Column<int>(type: "integer", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -61,8 +61,8 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Color = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -184,8 +184,8 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     Key = table.Column<string>(type: "character varying(10)", maxLength: 10, nullable: false),
                     Description = table.Column<string>(type: "text", nullable: true),
                     OwnerId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -205,63 +205,14 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Boards", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Boards_Projects_ProjectId",
-                        column: x => x.ProjectId,
-                        principalTable: "Projects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Issues",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Title = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: true),
-                    Type = table.Column<int>(type: "integer", nullable: false),
-                    Priority = table.Column<int>(type: "integer", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    Deadline = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    IssueKey = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    IssueNumber = table.Column<int>(type: "integer", nullable: false),
-                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
-                    AssigneeId = table.Column<Guid>(type: "uuid", nullable: true),
-                    ReporterId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ParentIssueId = table.Column<Guid>(type: "uuid", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Issues", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Issues_AspNetUsers_AssigneeId",
-                        column: x => x.AssigneeId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Issues_AspNetUsers_ReporterId",
-                        column: x => x.ReporterId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Issues_Issues_ParentIssueId",
-                        column: x => x.ParentIssueId,
-                        principalTable: "Issues",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Issues_Projects_ProjectId",
                         column: x => x.ProjectId,
                         principalTable: "Projects",
                         principalColumn: "Id",
@@ -294,6 +245,31 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Sprints",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
+                    Goal = table.Column<string>(type: "text", nullable: true),
+                    StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Sprints", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Sprints_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "BoardColumns",
                 columns: table => new
                 {
@@ -302,8 +278,8 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     Order = table.Column<int>(type: "integer", nullable: false),
                     MappedStatus = table.Column<int>(type: "integer", nullable: false),
                     BoardId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -317,6 +293,62 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Issues",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Title = table.Column<string>(type: "character varying(500)", maxLength: 500, nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: true),
+                    Type = table.Column<int>(type: "integer", nullable: false),
+                    Priority = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    Deadline = table.Column<DateTime>(type: "timestamp without time zone", nullable: true),
+                    IssueKey = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    IssueNumber = table.Column<int>(type: "integer", nullable: false),
+                    ProjectId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AssigneeId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ReporterId = table.Column<Guid>(type: "uuid", nullable: false),
+                    SprintId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ParentIssueId = table.Column<Guid>(type: "uuid", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Issues", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Issues_AspNetUsers_AssigneeId",
+                        column: x => x.AssigneeId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Issues_AspNetUsers_ReporterId",
+                        column: x => x.ReporterId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Issues_Issues_ParentIssueId",
+                        column: x => x.ParentIssueId,
+                        principalTable: "Issues",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Issues_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Issues_Sprints_SprintId",
+                        column: x => x.SprintId,
+                        principalTable: "Sprints",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Comments",
                 columns: table => new
                 {
@@ -324,8 +356,8 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     Text = table.Column<string>(type: "text", nullable: false),
                     IssueId = table.Column<Guid>(type: "uuid", nullable: false),
                     AuthorId = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    CreatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp without time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -452,6 +484,11 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                 column: "ReporterId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Issues_SprintId",
+                table: "Issues",
+                column: "SprintId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_IssueTags_TagId",
                 table: "IssueTags",
                 column: "TagId");
@@ -471,6 +508,11 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                 name: "IX_Projects_OwnerId",
                 table: "Projects",
                 column: "OwnerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sprints_ProjectId",
+                table: "Sprints",
+                column: "ProjectId");
         }
 
         /// <inheritdoc />
@@ -514,6 +556,9 @@ namespace TaskTracker.Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Tags");
+
+            migrationBuilder.DropTable(
+                name: "Sprints");
 
             migrationBuilder.DropTable(
                 name: "Projects");

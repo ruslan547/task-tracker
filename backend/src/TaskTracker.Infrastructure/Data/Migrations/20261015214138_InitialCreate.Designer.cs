@@ -12,7 +12,7 @@ using TaskTracker.Infrastructure.Data;
 namespace TaskTracker.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20261015193911_InitialCreate")]
+    [Migration("20261015214138_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -169,7 +169,7 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -237,7 +237,7 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -248,7 +248,7 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -267,7 +267,7 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<int>("MappedStatus")
                         .HasColumnType("integer");
@@ -280,7 +280,7 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -299,7 +299,7 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("IssueId")
                         .HasColumnType("uuid");
@@ -309,7 +309,7 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -330,10 +330,10 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<DateTime?>("Deadline")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -358,6 +358,9 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     b.Property<Guid>("ReporterId")
                         .HasColumnType("uuid");
 
+                    b.Property<Guid?>("SprintId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
@@ -370,7 +373,7 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("integer");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -384,6 +387,8 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("ReporterId");
+
+                    b.HasIndex("SprintId");
 
                     b.ToTable("Issues");
                 });
@@ -410,7 +415,7 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Description")
                         .HasColumnType("text");
@@ -429,7 +434,7 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -459,6 +464,45 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     b.ToTable("ProjectMembers");
                 });
 
+            modelBuilder.Entity("TaskTracker.Domain.Entities.Sprint", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("Goal")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<Guid>("ProjectId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Sprints");
+                });
+
             modelBuilder.Entity("TaskTracker.Domain.Entities.Tag", b =>
                 {
                     b.Property<Guid>("Id")
@@ -470,14 +514,14 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
+                        .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
 
@@ -600,6 +644,11 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("TaskTracker.Domain.Entities.Sprint", "Sprint")
+                        .WithMany("Issues")
+                        .HasForeignKey("SprintId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Assignee");
 
                     b.Navigation("ParentIssue");
@@ -607,6 +656,8 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     b.Navigation("Project");
 
                     b.Navigation("Reporter");
+
+                    b.Navigation("Sprint");
                 });
 
             modelBuilder.Entity("TaskTracker.Domain.Entities.IssueTag", b =>
@@ -658,6 +709,17 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("TaskTracker.Domain.Entities.Sprint", b =>
+                {
+                    b.HasOne("TaskTracker.Domain.Entities.Project", "Project")
+                        .WithMany()
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Project");
+                });
+
             modelBuilder.Entity("TaskTracker.Domain.Entities.AppUser", b =>
                 {
                     b.Navigation("AssignedIssues");
@@ -688,6 +750,11 @@ namespace TaskTracker.Infrastructure.Data.Migrations
                     b.Navigation("Issues");
 
                     b.Navigation("Members");
+                });
+
+            modelBuilder.Entity("TaskTracker.Domain.Entities.Sprint", b =>
+                {
+                    b.Navigation("Issues");
                 });
 
             modelBuilder.Entity("TaskTracker.Domain.Entities.Tag", b =>
