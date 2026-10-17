@@ -11,6 +11,7 @@ import IssueDetail from './components/Issues/IssueDetail';
 import Dashboard from './components/Dashboard/Dashboard';
 import SprintManager from './components/Sprints/SprintManager';
 import UsersPage from './components/Auth/UsersPage';
+import ProjectMembers from './components/Projects/ProjectMembers';
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
               <Route path="issue/:issueId" element={<IssueDetail />} />
               <Route path="sprints" element={<SprintManager />} />
               <Route path="dashboard" element={<Dashboard />} />
+              <Route path="members" element={<ProjectMembers />} />
             </Route>
             <Route path="/users" element={<UsersPage />} />
           </Route>

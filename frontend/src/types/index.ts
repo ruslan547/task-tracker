@@ -90,6 +90,13 @@ export interface Sprint {
   doneIssues: number;
 }
 
+export interface ProjectMember {
+  userId: string;
+  fullName: string;
+  email: string;
+  role: string;
+}
+
 export interface BurndownPoint {
   date: string;
   remaining: number;

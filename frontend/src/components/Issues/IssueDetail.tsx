@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getIssue, updateIssue, deleteIssue } from '../../api/issues';
 import { getCommentsByIssue, createComment } from '../../api/comments';
-import { getUsers } from '../../api/auth';
 import { getSprintsByProject, assignIssueToSprint } from '../../api/sprints';
+import { getProjectMembers } from '../../api/projects';
 import { useAuth } from '../../context/AuthContext';
-import { Issue, Comment, User, Sprint } from '../../types';
+import { Issue, Comment, ProjectMember, Sprint } from '../../types';
 
 const statusOptions = [
   { value: 0, label: 'К выполнению' },
@@ -24,7 +24,7 @@ export default function IssueDetail() {
   const canDelete = currentUser?.role === 'Administrator' || currentUser?.role === 'ProjectManager';
   const [issue, setIssue] = useState<Issue | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+  const [members, setMembers] = useState<ProjectMember[]>([]);
   const [newComment, setNewComment] = useState('');
   const [sprints, setSprints] = useState<Sprint[]>([]);
   const [editing, setEditing] = useState(false);
@@ -40,8 +40,10 @@ export default function IssueDetail() {
       });
       getCommentsByIssue(issueId).then((res) => setComments(res.data));
     }
-    getUsers().then((res) => setUsers(res.data));
-    if (projectId) getSprintsByProject(projectId).then((res) => setSprints(res.data));
+    if (projectId) {
+      getProjectMembers(projectId).then((res) => setMembers(res.data));
+      getSprintsByProject(projectId).then((res) => setSprints(res.data));
+    }
   }, [issueId, projectId]);
 
   const handleStatusChange = async (status: number) => {
@@ -191,7 +193,7 @@ export default function IssueDetail() {
               onChange={(e) => handleAssigneeChange(e.target.value)}
             >
               <option value="">Не назначен</option>
-              {users.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}
+              {members.map((m) => <option key={m.userId} value={m.userId}>{m.fullName}</option>)}
             </select>
             )}
           </div>

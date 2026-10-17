@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getIssuesByProject, createIssue } from '../../api/issues';
-import { getUsers } from '../../api/auth';
 import { getSprintsByProject } from '../../api/sprints';
+import { getProjectMembers } from '../../api/projects';
 import { useAuth } from '../../context/AuthContext';
-import { Issue, User, Sprint } from '../../types';
+import { Issue, ProjectMember, Sprint } from '../../types';
 import { getProject } from '../../api/projects';
 
 const canCreateIssues = (role?: string) => role !== 'Observer';
@@ -26,7 +26,7 @@ export default function IssueList() {
   const { user } = useAuth();
   const { projectId } = useParams<{ projectId: string }>();
   const [issues, setIssues] = useState<Issue[]>([]);
-  const [users, setUsers] = useState<User[]>([]);
+  const [members, setMembers] = useState<ProjectMember[]>([]);
   const [projectKey, setProjectKey] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [title, setTitle] = useState('');
@@ -48,8 +48,10 @@ export default function IssueList() {
 
   useEffect(() => {
     load();
-    getUsers().then((res) => setUsers(res.data));
-    if (projectId) getSprintsByProject(projectId).then((res) => setSprints(res.data));
+    if (projectId) {
+      getProjectMembers(projectId).then((res) => setMembers(res.data));
+      getSprintsByProject(projectId).then((res) => setSprints(res.data));
+    }
   }, [projectId]);
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -129,7 +131,7 @@ export default function IssueList() {
               <label>Исполнитель</label>
               <select value={assigneeId} onChange={(e) => setAssigneeId(e.target.value)}>
                 <option value="">Не назначен</option>
-                {users.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}
+                {members.map((m) => <option key={m.userId} value={m.userId}>{m.fullName}</option>)}
               </select>
             </div>
             <div className="form-group">

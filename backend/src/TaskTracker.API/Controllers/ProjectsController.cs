@@ -59,4 +59,27 @@ public class ProjectsController : ControllerBase
         await _mediator.Send(new DeleteProjectCommand(id));
         return NoContent();
     }
+
+    [HttpGet("{projectId:guid}/members")]
+    public async Task<ActionResult<List<ProjectMemberDto>>> GetMembers(Guid projectId)
+    {
+        var result = await _mediator.Send(new GetProjectMembersQuery(projectId));
+        return Ok(result);
+    }
+
+    [Authorize(Roles = "Administrator,ProjectManager")]
+    [HttpPost("{projectId:guid}/members")]
+    public async Task<IActionResult> AddMember(Guid projectId, AddProjectMemberDto dto)
+    {
+        await _mediator.Send(new AddProjectMemberCommand(projectId, dto));
+        return NoContent();
+    }
+
+    [Authorize(Roles = "Administrator,ProjectManager")]
+    [HttpDelete("{projectId:guid}/members/{userId:guid}")]
+    public async Task<IActionResult> RemoveMember(Guid projectId, Guid userId)
+    {
+        await _mediator.Send(new RemoveProjectMemberCommand(projectId, userId));
+        return NoContent();
+    }
 }
