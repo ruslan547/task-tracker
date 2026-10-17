@@ -49,9 +49,9 @@ public class SprintsController : ControllerBase
 
     [Authorize(Roles = "Administrator,ProjectManager,Developer,Tester")]
     [HttpPatch("assign/{issueId:guid}")]
-    public async Task<IActionResult> AssignIssue(Guid issueId, [FromBody] Guid? sprintId)
+    public async Task<IActionResult> AssignIssue(Guid issueId, [FromBody] AssignSprintDto dto)
     {
-        await _mediator.Send(new AssignIssueToSprintCommand(issueId, sprintId));
+        await _mediator.Send(new AssignIssueToSprintCommand(issueId, dto.SprintId));
         return NoContent();
     }
 

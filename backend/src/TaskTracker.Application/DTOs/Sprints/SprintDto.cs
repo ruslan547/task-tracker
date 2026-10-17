@@ -16,3 +16,5 @@ public record SprintDto(
 public record CreateSprintDto(string Name, string? Goal, DateTime StartDate, DateTime EndDate);
 
 public record BurndownPointDto(DateTime Date, int Remaining);
+
+public record AssignSprintDto(Guid? SprintId);

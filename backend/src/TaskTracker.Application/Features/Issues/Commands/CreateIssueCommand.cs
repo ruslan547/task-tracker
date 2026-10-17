@@ -43,6 +43,7 @@ public class CreateIssueCommandHandler : IRequestHandler<CreateIssueCommand, Iss
             AssigneeId = request.Dto.AssigneeId,
             ReporterId = request.ReporterId,
             ParentIssueId = request.Dto.ParentIssueId,
+            SprintId = request.Dto.SprintId,
             IssueNumber = issueNumber,
             IssueKey = $"{project.Key}-{issueNumber}"
         };

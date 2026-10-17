@@ -14,7 +14,7 @@ export const completeSprint = (id: string) =>
   api.patch<Sprint>(`/sprints/${id}/complete`);
 
 export const assignIssueToSprint = (issueId: string, sprintId: string | null) =>
-  api.patch(`/sprints/assign/${issueId}`, sprintId);
+  api.patch(`/sprints/assign/${issueId}`, { sprintId });
 
 export const getBurndown = (sprintId: string) =>
   api.get<BurndownPoint[]>(`/sprints/${sprintId}/burndown`);

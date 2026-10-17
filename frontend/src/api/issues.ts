@@ -15,6 +15,7 @@ export const createIssue = (data: {
   projectId: string;
   assigneeId?: string;
   parentIssueId?: string;
+  sprintId?: string;
   tagIds?: string[];
 }) => api.post<Issue>('/issues', data);
 
@@ -22,6 +23,6 @@ export const updateIssue = (id: string, data: Record<string, unknown>) =>
   api.put<Issue>(`/issues/${id}`, data);
 
 export const moveIssue = (id: string, status: number) =>
-  api.patch(`/issues/${id}/move`, status);
+  api.patch(`/issues/${id}/move`, { status });
 
 export const deleteIssue = (id: string) => api.delete(`/issues/${id}`);

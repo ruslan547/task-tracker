@@ -11,4 +11,5 @@ public record CreateIssueDto(
     Guid ProjectId,
     Guid? AssigneeId,
     Guid? ParentIssueId,
+    Guid? SprintId,
     List<Guid>? TagIds);

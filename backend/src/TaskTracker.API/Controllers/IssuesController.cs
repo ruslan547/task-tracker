@@ -55,9 +55,9 @@ public class IssuesController : ControllerBase
 
     [Authorize(Roles = "Administrator,ProjectManager,Developer,Tester")]
     [HttpPatch("{id:guid}/move")]
-    public async Task<IActionResult> Move(Guid id, [FromBody] IssueStatus status)
+    public async Task<IActionResult> Move(Guid id, [FromBody] MoveIssueDto dto)
     {
-        await _mediator.Send(new MoveIssueCommand(id, status));
+        await _mediator.Send(new MoveIssueCommand(id, dto.Status));
         return NoContent();
     }
 

@@ -3,8 +3,9 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getIssue, updateIssue, deleteIssue } from '../../api/issues';
 import { getCommentsByIssue, createComment } from '../../api/comments';
 import { getUsers } from '../../api/auth';
+import { getSprintsByProject, assignIssueToSprint } from '../../api/sprints';
 import { useAuth } from '../../context/AuthContext';
-import { Issue, Comment, User } from '../../types';
+import { Issue, Comment, User, Sprint } from '../../types';
 
 const statusOptions = [
   { value: 0, label: 'К выполнению' },
@@ -25,6 +26,7 @@ export default function IssueDetail() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [newComment, setNewComment] = useState('');
+  const [sprints, setSprints] = useState<Sprint[]>([]);
   const [editing, setEditing] = useState(false);
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
@@ -39,7 +41,8 @@ export default function IssueDetail() {
       getCommentsByIssue(issueId).then((res) => setComments(res.data));
     }
     getUsers().then((res) => setUsers(res.data));
-  }, [issueId]);
+    if (projectId) getSprintsByProject(projectId).then((res) => setSprints(res.data));
+  }, [issueId, projectId]);
 
   const handleStatusChange = async (status: number) => {
     if (!issueId) return;
@@ -57,6 +60,12 @@ export default function IssueDetail() {
     if (!issueId) return;
     const res = await updateIssue(issueId, { assigneeId: assigneeId || null });
     setIssue(res.data);
+  };
+
+  const handleSprintChange = async (sprintId: string) => {
+    if (!issueId) return;
+    await assignIssueToSprint(issueId, sprintId || null);
+    setIssue((prev) => prev ? { ...prev, sprintId: sprintId || undefined } : prev);
   };
 
   const handleSaveEdit = async () => {
@@ -183,6 +192,22 @@ export default function IssueDetail() {
               <option value="">Не назначен</option>
               {users.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}
             </select>
+            )}
+          </div>
+          <div className="sidebar-field">
+            <label>Спринт</label>
+            {isObserver ? (
+              <span>{sprints.find((s) => s.id === issue.sprintId)?.name || 'Бэклог'}</span>
+            ) : (
+              <select
+                value={issue.sprintId || ''}
+                onChange={(e) => handleSprintChange(e.target.value)}
+              >
+                <option value="">Бэклог</option>
+                {sprints.filter((s) => s.status !== 'Completed').map((s) => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
+              </select>
             )}
           </div>
           <div className="sidebar-field">

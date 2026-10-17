@@ -22,3 +22,5 @@ public record IssueDto(
     DateTime CreatedAt,
     DateTime? UpdatedAt,
     List<string> Tags);
+
+public record MoveIssueDto(IssueStatus Status);

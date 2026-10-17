@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { getIssuesByProject, createIssue } from '../../api/issues';
 import { getUsers } from '../../api/auth';
+import { getSprintsByProject } from '../../api/sprints';
 import { useAuth } from '../../context/AuthContext';
-import { Issue, User } from '../../types';
+import { Issue, User, Sprint } from '../../types';
 import { getProject } from '../../api/projects';
 
 const canCreateIssues = (role?: string) => role !== 'Observer';
@@ -33,6 +34,8 @@ export default function IssueList() {
   const [type, setType] = useState(1);
   const [priority, setPriority] = useState(2);
   const [assigneeId, setAssigneeId] = useState('');
+  const [sprintId, setSprintId] = useState('');
+  const [sprints, setSprints] = useState<Sprint[]>([]);
 
   const load = () => {
     if (projectId) {
@@ -44,6 +47,7 @@ export default function IssueList() {
   useEffect(() => {
     load();
     getUsers().then((res) => setUsers(res.data));
+    if (projectId) getSprintsByProject(projectId).then((res) => setSprints(res.data));
   }, [projectId]);
 
   const handleCreate = async (e: React.FormEvent) => {
@@ -56,8 +60,9 @@ export default function IssueList() {
       priority,
       projectId,
       assigneeId: assigneeId || undefined,
+      sprintId: sprintId || undefined,
     });
-    setTitle(''); setDescription(''); setShowForm(false);
+    setTitle(''); setDescription(''); setSprintId(''); setShowForm(false);
     load();
   };
 
@@ -98,6 +103,15 @@ export default function IssueList() {
               <select value={assigneeId} onChange={(e) => setAssigneeId(e.target.value)}>
                 <option value="">Не назначен</option>
                 {users.map((u) => <option key={u.id} value={u.id}>{u.fullName}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Спринт</label>
+              <select value={sprintId} onChange={(e) => setSprintId(e.target.value)}>
+                <option value="">Бэклог</option>
+                {sprints.filter((s) => s.status !== 'Completed').map((s) => (
+                  <option key={s.id} value={s.id}>{s.name}</option>
+                ))}
               </select>
             </div>
           </div>
