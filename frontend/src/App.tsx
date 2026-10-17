@@ -5,7 +5,7 @@ import RegisterPage from './components/Auth/RegisterPage';
 import AppLayout from './components/Layout/AppLayout';
 import ProjectLayout from './components/Layout/ProjectLayout';
 import ProjectList from './components/Projects/ProjectList';
-import KanbanBoard from './components/Board/KanbanBoard';
+import Board from './components/Board/Board';
 import IssueList from './components/Issues/IssueList';
 import IssueDetail from './components/Issues/IssueDetail';
 import Dashboard from './components/Dashboard/Dashboard';
@@ -24,7 +24,7 @@ export default function App() {
             <Route path="/" element={<ProjectList />} />
             <Route path="/project/:projectId" element={<ProjectLayout />}>
               <Route index element={<Navigate to="board" />} />
-              <Route path="board" element={<KanbanBoard />} />
+              <Route path="board" element={<Board />} />
               <Route path="issues" element={<IssueList />} />
               <Route path="issue/:issueId" element={<IssueDetail />} />
               <Route path="sprints" element={<SprintManager />} />

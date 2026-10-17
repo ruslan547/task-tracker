@@ -93,11 +93,6 @@ export default function ProjectList() {
               <span>Задач: {p.issueCount}</span>
               <span>Участников: {p.memberCount}</span>
             </div>
-            <div className="project-actions">
-              <Link to={`/project/${p.id}/board`} className="btn btn-sm">Доска</Link>
-              <Link to={`/project/${p.id}/issues`} className="btn btn-sm">Задачи</Link>
-              <Link to={`/project/${p.id}/dashboard`} className="btn btn-sm">Дашборд</Link>
-            </div>
           </div>
         ))}
       </div>

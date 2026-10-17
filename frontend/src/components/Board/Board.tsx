@@ -28,7 +28,7 @@ const typeIcons: Record<string, string> = {
   Epic: '⚡',
 };
 
-export default function KanbanBoard() {
+export default function Board() {
   const { projectId } = useParams<{ projectId: string }>();
   const [board, setBoard] = useState<Board | null>(null);
   const [sprints, setSprints] = useState<Sprint[]>([]);
@@ -86,7 +86,7 @@ export default function KanbanBoard() {
   const activeSprint = sprints.find((s) => s.id === selectedSprintId);
 
   return (
-    <div className="kanban-board">
+    <div className="board">
       <div className="page-header">
         <div>
           <h1>Доска</h1>

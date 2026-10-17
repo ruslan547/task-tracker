@@ -127,9 +127,9 @@ a:hover { text-decoration: underline; }
 .project-actions { display: flex; gap: 8px; }
 
 /* Board */
-.kanban-board { min-height: calc(100vh - 130px); }
-.board-columns { display: flex; gap: 16px; overflow-x: auto; padding-bottom: 16px; }
-.board-column { flex: 0 0 280px; background: #f1f5f9; border-radius: var(--radius); display: flex; flex-direction: column; max-height: calc(100vh - 180px); }
+.board { min-height: calc(100vh - 130px); }
+.board-columns { display: flex; gap: 16px; padding-bottom: 16px; justify-content: center; }
+.board-column { flex: 1; min-width: 240px; max-width: 320px; background: #f1f5f9; border-radius: var(--radius); display: flex; flex-direction: column; max-height: calc(100vh - 180px); }
 .column-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; font-weight: 600; font-size: 14px; }
 .column-count { background: #e2e8f0; padding: 2px 8px; border-radius: 10px; font-size: 12px; }
 .column-body { flex: 1; padding: 8px; overflow-y: auto; min-height: 60px; }
