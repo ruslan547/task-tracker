@@ -28,7 +28,7 @@ public class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
-        configurationBuilder.Properties<DateTime>().HaveColumnType("timestamp without time zone");
-        configurationBuilder.Properties<DateTime?>().HaveColumnType("timestamp without time zone");
+        configurationBuilder.Properties<DateTime>().HaveColumnType("timestamp with time zone");
+        configurationBuilder.Properties<DateTime?>().HaveColumnType("timestamp with time zone");
     }
 }

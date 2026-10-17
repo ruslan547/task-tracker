@@ -13,7 +13,9 @@ services:
       - pgdata:/var/lib/postgresql/data
 
   backend:
-    build: ./backend/src/TaskTracker.API
+    build:
+      context: ./backend
+      dockerfile: src/TaskTracker.API/Dockerfile
     ports:
       - "5000:8080"
     environment:
