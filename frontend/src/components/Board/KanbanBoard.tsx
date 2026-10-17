@@ -60,6 +60,7 @@ export default function KanbanBoard() {
     const issue = sourceCol.issues[result.source.index];
     const newStatus = statusMap[destCol.mappedStatus];
 
+    const prevColumns = board.columns;
     const newColumns = board.columns.map((col): BoardColumn => {
       if (col.id === sourceCol.id) {
         return { ...col, issues: col.issues.filter((_, i) => i !== result.source.index) };
@@ -73,7 +74,11 @@ export default function KanbanBoard() {
     });
     setBoard({ ...board, columns: newColumns });
 
-    await moveIssue(issue.id, newStatus);
+    try {
+      await moveIssue(issue.id, newStatus);
+    } catch {
+      setBoard({ ...board, columns: prevColumns });
+    }
   };
 
   if (!board) return <div className="loading">Загрузка доски...</div>;

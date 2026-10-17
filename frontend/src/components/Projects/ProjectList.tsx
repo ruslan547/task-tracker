@@ -13,6 +13,7 @@ export default function ProjectList() {
   const [name, setName] = useState('');
   const [key, setKey] = useState('');
   const [description, setDescription] = useState('');
+  const [error, setError] = useState('');
 
   const load = () => {
     getProjects().then((res) => setProjects(res.data));
@@ -22,15 +23,24 @@ export default function ProjectList() {
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    await createProject({ name, key, description: description || undefined });
-    setName(''); setKey(''); setDescription(''); setShowForm(false);
-    load();
+    setError('');
+    try {
+      await createProject({ name, key, description: description || undefined });
+      setName(''); setKey(''); setDescription(''); setShowForm(false);
+      load();
+    } catch {
+      setError('Не удалось создать проект.');
+    }
   };
 
   const handleDelete = async (id: string) => {
     if (confirm('Удалить проект?')) {
-      await deleteProject(id);
-      load();
+      try {
+        await deleteProject(id);
+        load();
+      } catch {
+        setError('Не удалось удалить проект.');
+      }
     }
   };
 
@@ -45,6 +55,7 @@ export default function ProjectList() {
         )}
       </div>
 
+      {error && <div className="error-message">{error}</div>}
       {showForm && (
         <form onSubmit={handleCreate} className="create-form">
           <div className="form-row">

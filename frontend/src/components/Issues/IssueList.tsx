@@ -36,6 +36,7 @@ export default function IssueList() {
   const [assigneeId, setAssigneeId] = useState('');
   const [sprintId, setSprintId] = useState('');
   const [sprints, setSprints] = useState<Sprint[]>([]);
+  const [error, setError] = useState('');
 
   const load = () => {
     if (projectId) {
@@ -53,21 +54,27 @@ export default function IssueList() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!projectId) return;
-    await createIssue({
-      title,
-      description: description || undefined,
-      type,
-      priority,
-      projectId,
-      assigneeId: assigneeId || undefined,
-      sprintId: sprintId || undefined,
-    });
-    setTitle(''); setDescription(''); setSprintId(''); setShowForm(false);
-    load();
+    setError('');
+    try {
+      await createIssue({
+        title,
+        description: description || undefined,
+        type,
+        priority,
+        projectId,
+        assigneeId: assigneeId || undefined,
+        sprintId: sprintId || undefined,
+      });
+      setTitle(''); setDescription(''); setSprintId(''); setShowForm(false);
+      load();
+    } catch {
+      setError('Не удалось создать задачу.');
+    }
   };
 
   return (
     <div className="issue-list">
+      {error && <div className="error-message">{error}</div>}
       <div className="page-header">
         <h1>Задачи ({projectKey})</h1>
         <div>

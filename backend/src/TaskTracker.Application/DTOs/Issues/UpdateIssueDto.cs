@@ -9,4 +9,5 @@ public record UpdateIssueDto(
     IssueStatus? Status,
     DateTime? Deadline,
     Guid? AssigneeId,
-    List<Guid>? TagIds);
+    bool ClearAssignee = false,
+    List<Guid>? TagIds = null);

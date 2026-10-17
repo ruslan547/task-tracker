@@ -58,7 +58,8 @@ export default function IssueDetail() {
 
   const handleAssigneeChange = async (assigneeId: string) => {
     if (!issueId) return;
-    const res = await updateIssue(issueId, { assigneeId: assigneeId || null });
+    const data = assigneeId ? { assigneeId } : { clearAssignee: true };
+    const res = await updateIssue(issueId, data);
     setIssue(res.data);
   };
 

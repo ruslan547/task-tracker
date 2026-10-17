@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using TaskTracker.Application.Common.Interfaces;
 using TaskTracker.Application.DTOs.Projects;
 using TaskTracker.Domain.Entities;
@@ -11,10 +12,12 @@ public record CreateProjectCommand(CreateProjectDto Dto, Guid UserId) : IRequest
 public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, ProjectDto>
 {
     private readonly IAppDbContext _db;
+    private readonly UserManager<AppUser> _userManager;
 
-    public CreateProjectCommandHandler(IAppDbContext db)
+    public CreateProjectCommandHandler(IAppDbContext db, UserManager<AppUser> userManager)
     {
         _db = db;
+        _userManager = userManager;
     }
 
     public async Task<ProjectDto> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
@@ -54,7 +57,8 @@ public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand,
 
         await _db.SaveChangesAsync(cancellationToken);
 
+        var owner = await _userManager.FindByIdAsync(request.UserId.ToString());
         return new ProjectDto(project.Id, project.Name, project.Key, project.Description,
-            project.OwnerId, string.Empty, project.CreatedAt, 1, 0);
+            project.OwnerId, owner?.FullName ?? string.Empty, project.CreatedAt, 1, 0);
     }
 }

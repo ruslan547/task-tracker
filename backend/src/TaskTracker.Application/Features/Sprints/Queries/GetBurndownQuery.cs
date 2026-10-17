@@ -30,11 +30,12 @@ public class GetBurndownQueryHandler : IRequestHandler<GetBurndownQuery, List<Bu
         var endDate = sprint.Status == SprintStatus.Completed ? sprint.EndDate : DateTime.UtcNow;
         if (endDate > DateTime.UtcNow) endDate = DateTime.UtcNow;
 
-        for (var date = sprint.StartDate.Date; date <= endDate.Date; date = date.AddDays(1))
+        for (var date = DateTime.SpecifyKind(sprint.StartDate.Date, DateTimeKind.Utc); date <= endDate.Date; date = date.AddDays(1))
         {
+            var nextDay = date.AddDays(1);
             var doneByDate = issues.Count(i =>
                 i.Status == IssueStatus.Done &&
-                (i.UpdatedAt ?? i.CreatedAt) <= date.AddDays(1));
+                (i.UpdatedAt ?? i.CreatedAt) <= nextDay);
             points.Add(new BurndownPointDto(date, totalIssues - doneByDate));
         }
 

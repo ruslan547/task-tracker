@@ -21,6 +21,7 @@ export default function SprintManager() {
   const [goal, setGoal] = useState('');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [error, setError] = useState('');
 
   const load = () => {
     if (projectId) getSprintsByProject(projectId).then((res) => setSprints(res.data));
@@ -31,20 +32,33 @@ export default function SprintManager() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!projectId) return;
-    await createSprint(projectId, { name, goal: goal || undefined, startDate, endDate });
-    setName(''); setGoal(''); setStartDate(''); setEndDate(''); setShowForm(false);
-    load();
+    setError('');
+    try {
+      await createSprint(projectId, { name, goal: goal || undefined, startDate, endDate });
+      setName(''); setGoal(''); setStartDate(''); setEndDate(''); setShowForm(false);
+      load();
+    } catch {
+      setError('Не удалось создать спринт.');
+    }
   };
 
   const handleStart = async (id: string) => {
-    await startSprint(id);
-    load();
+    try {
+      await startSprint(id);
+      load();
+    } catch {
+      setError('Не удалось начать спринт.');
+    }
   };
 
   const handleComplete = async (id: string) => {
     if (confirm('Завершить спринт? Незавершённые задачи вернутся в бэклог.')) {
-      await completeSprint(id);
-      load();
+      try {
+        await completeSprint(id);
+        load();
+      } catch {
+        setError('Не удалось завершить спринт.');
+      }
     }
   };
 
@@ -52,6 +66,7 @@ export default function SprintManager() {
 
   return (
     <div className="sprint-manager">
+      {error && <div className="error-message">{error}</div>}
       <div className="page-header">
         <h1>Спринты</h1>
         {canManage(user?.role) && (

@@ -29,7 +29,10 @@ public class UpdateIssueCommandHandler : IRequestHandler<UpdateIssueCommand, Iss
         if (request.Dto.Priority.HasValue) issue.Priority = request.Dto.Priority.Value;
         if (request.Dto.Status.HasValue) issue.Status = request.Dto.Status.Value;
         if (request.Dto.Deadline.HasValue) issue.Deadline = request.Dto.Deadline.Value;
-        issue.AssigneeId = request.Dto.AssigneeId ?? issue.AssigneeId;
+        if (request.Dto.ClearAssignee)
+            issue.AssigneeId = null;
+        else if (request.Dto.AssigneeId.HasValue)
+            issue.AssigneeId = request.Dto.AssigneeId.Value;
         issue.UpdatedAt = DateTime.UtcNow;
 
         if (request.Dto.TagIds != null)

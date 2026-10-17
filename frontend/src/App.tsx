@@ -22,6 +22,7 @@ export default function App() {
           <Route element={<AppLayout />}>
             <Route path="/" element={<ProjectList />} />
             <Route path="/project/:projectId" element={<ProjectLayout />}>
+              <Route index element={<Navigate to="board" />} />
               <Route path="board" element={<KanbanBoard />} />
               <Route path="issues" element={<IssueList />} />
               <Route path="issue/:issueId" element={<IssueDetail />} />
