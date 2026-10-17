@@ -37,6 +37,7 @@ export default function IssueList() {
   const [sprintId, setSprintId] = useState('');
   const [sprints, setSprints] = useState<Sprint[]>([]);
   const [error, setError] = useState('');
+  const [filterSprint, setFilterSprint] = useState('all');
 
   const load = () => {
     if (projectId) {
@@ -72,14 +73,33 @@ export default function IssueList() {
     }
   };
 
+  const filteredIssues = issues.filter((issue) => {
+    if (filterSprint === 'all') return true;
+    if (filterSprint === 'backlog') return !issue.sprintId;
+    return issue.sprintId === filterSprint;
+  });
+
   return (
     <div className="issue-list">
       {error && <div className="error-message">{error}</div>}
       <div className="page-header">
         <h1>Задачи ({projectKey})</h1>
-        <div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <select
+            className="sprint-select"
+            value={filterSprint}
+            onChange={(e) => setFilterSprint(e.target.value)}
+          >
+            <option value="all">Все задачи</option>
+            <option value="backlog">Бэклог</option>
+            {sprints.map((s) => (
+              <option key={s.id} value={s.id}>
+                {s.name} {s.status === 'Active' ? '(активный)' : s.status === 'Completed' ? '(завершён)' : '(план.)'}
+              </option>
+            ))}
+          </select>
           {canCreateIssues(user?.role) && (
-            <button onClick={() => setShowForm(!showForm)} className="btn btn-primary" style={{ marginLeft: 8 }}>
+            <button onClick={() => setShowForm(!showForm)} className="btn btn-primary">
               {showForm ? 'Отмена' : '+ Новая задача'}
             </button>
           )}
@@ -138,24 +158,26 @@ export default function IssueList() {
             <th>Тип</th>
             <th>Приоритет</th>
             <th>Статус</th>
+            <th>Спринт</th>
             <th>Исполнитель</th>
           </tr>
         </thead>
         <tbody>
-          {issues.map((issue) => (
+          {filteredIssues.map((issue) => (
             <tr key={issue.id}>
               <td><Link to={`/project/${projectId}/issue/${issue.id}`}>{issue.issueKey}</Link></td>
               <td><Link to={`/project/${projectId}/issue/${issue.id}`}>{issue.title}</Link></td>
               <td><span className={`badge type-${toStr(issue.type, typeOptions).toLowerCase()}`}>{toStr(issue.type, typeOptions)}</span></td>
               <td><span className={`badge priority-${toStr(issue.priority, priorityOptions).toLowerCase()}`}>{toStr(issue.priority, priorityOptions)}</span></td>
               <td><span className={`badge status-${toStr(issue.status, statusOptions).toLowerCase()}`}>{statusLabels[toStr(issue.status, statusOptions)] || toStr(issue.status, statusOptions)}</span></td>
+              <td>{sprints.find((s) => s.id === issue.sprintId)?.name || 'Бэклог'}</td>
               <td>{issue.assigneeName || '—'}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      {issues.length === 0 && !showForm && (
-        <p className="empty-state">Нет задач в проекте. Создайте первую!</p>
+      {filteredIssues.length === 0 && !showForm && (
+        <p className="empty-state">{filterSprint === 'all' ? 'Нет задач в проекте. Создайте первую!' : filterSprint === 'backlog' ? 'Бэклог пуст.' : 'В этом спринте нет задач.'}</p>
       )}
     </div>
   );

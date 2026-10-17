@@ -89,7 +89,7 @@ export default function KanbanBoard() {
     <div className="kanban-board">
       <div className="page-header">
         <div>
-          <h1>Scrum-доска</h1>
+          <h1>Доска</h1>
           {activeSprint && (
             <span className="sprint-info">
               {activeSprint.name} ({new Date(activeSprint.startDate).toLocaleDateString('ru')} — {new Date(activeSprint.endDate).toLocaleDateString('ru')})
